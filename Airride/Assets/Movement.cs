@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Movement : MonoBehaviour
 {
@@ -9,22 +10,30 @@ public class Movement : MonoBehaviour
 
     private Vector2 input;
     private Rigidbody rb;
+    private PhotonView view;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        view = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        input.Normalize();
+        if (view.IsMine)
+        {
+            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            input.Normalize();
+        }
     }
 
     private void FixedUpdate()
     {
-        rb.AddForce(CalculateMovement(), ForceMode.VelocityChange);
+        if (view.IsMine)
+        {
+            rb.AddForce(CalculateMovement(), ForceMode.VelocityChange);
+        }
     }
 
     private Vector3 CalculateMovement()
