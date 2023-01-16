@@ -1095,6 +1095,7 @@ GameObject:
   m_Component:
   - component: {fileID: 398171192}
   - component: {fileID: 398171193}
+  - component: {fileID: 398171194}
   m_Layer: 0
   m_Name: SetUpNewPlayer
   m_TagString: Untagged
@@ -1150,6 +1151,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   nameInputField: {fileID: 0}
+--- !u!114 &398171194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398171191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db041047c2914d4a94401bf1202525d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &404521894
 GameObject:
   m_ObjectHideFlags: 0
