@@ -4,8 +4,9 @@ using UnityEngine.EventSystems;
 using Photon.Pun;
 
 using System.Collections;
+using Photon.Pun.Demo.PunBasics;
 
-namespace Photon.Pun.Demo.PunBasics
+namespace Com.MyCompany.MyGame
 {
     /// <summary>
     /// Player manager.
@@ -32,6 +33,18 @@ namespace Photon.Pun.Demo.PunBasics
         }
         #endregion
 
+        #region Public Fields
+
+        [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
+        public static GameObject LocalPlayerInstance;
+
+        [Tooltip("The Player's UI GameObject Prefab")]
+        [SerializeField]
+        public GameObject PlayerUiPrefab;
+
+        #endregion
+
+
         #region Private Fields
 
         [Tooltip("The Beams GameObject to control")]
@@ -43,6 +56,18 @@ namespace Photon.Pun.Demo.PunBasics
         public float Health = 1f;
         #endregion
 
+
+        #region Private Methods
+
+        #if UNITY54ORNEWER
+        void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadingMode)
+        {
+            this.CalledOnLevelWasLoaded(scene.buildIndex);
+        }
+        #endif
+
+
+        #endregion
         #region MonoBehaviour CallBacks
 
         /// <summary>
@@ -50,6 +75,16 @@ namespace Photon.Pun.Demo.PunBasics
         /// </summary>
         void Awake()
         {
+            // #Important
+            // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
+            if (photonView.IsMine)
+            {
+                LocalPlayerInstance = this.gameObject;
+            }
+            // #Critical
+            // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+            DontDestroyOnLoad(this.gameObject);
+
             if (beams == null)
             {
                 Debug.LogError("<Color=Red><a>Missing</a></Color> Beams Reference.", this);
@@ -77,6 +112,21 @@ namespace Photon.Pun.Demo.PunBasics
             {
                 Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
             }
+
+            if (PlayerUiPrefab != null)
+            {
+                GameObject _uiGo = Instantiate(PlayerUiPrefab);
+                _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
+            }
+            else
+            {
+                Debug.LogWarning("<Color=Red><a>Missing</a></Color> PlayerUiPrefab reference on player Prefab.", this);
+            }
+
+            #if UNITY54ORNEWER
+            // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+            #endif
         }
 
         /// <summary>
@@ -140,6 +190,35 @@ namespace Photon.Pun.Demo.PunBasics
             Health -= 0.1f * Time.deltaTime;
         }
 
+        #if !UNITY_5_4_OR_NEWER
+        /// <summary>See CalledOnLevelWasLoaded. Outdated in Unity 5.4.</summary>
+        void OnLevelWasLoaded(int level)
+        {
+            this.CalledOnLevelWasLoaded(level);
+        }
+        #endif
+
+        #if UNITY54ORNEWER
+        public override void OnDisable()
+        {
+            // Always call the base to remove callbacks
+            base.OnDisable ();
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        #endif
+
+        void CalledOnLevelWasLoaded(int level)
+        {
+            // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
+            if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
+            {
+                transform.position = new Vector3(0f, 5f, 0f);
+            }
+
+            GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
+            _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
+        }
+
         #endregion
 
         #region Custom
@@ -169,5 +248,6 @@ namespace Photon.Pun.Demo.PunBasics
         }
 
         #endregion
+
     }
 }
