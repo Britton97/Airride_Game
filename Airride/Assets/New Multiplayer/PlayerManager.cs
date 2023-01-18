@@ -101,6 +101,8 @@ namespace Com.MyCompany.MyGame
         void Start()
         {
             CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
+            CameraFollow _cameraFollow = this.gameObject.GetComponent<CameraFollow>();
+            #region Old CameraWork Delete Later
             if (_cameraWork != null)
             {
                 if (photonView.IsMine)
@@ -112,7 +114,19 @@ namespace Com.MyCompany.MyGame
             {
                 Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
             }
-
+            #endregion
+            if (_cameraFollow != null)
+            {
+                if (photonView.IsMine)
+                {
+                    _cameraFollow.OnStartFollowing();
+                }
+            }
+            else
+            {
+                Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
+            }
+            
             if (PlayerUiPrefab != null)
             {
                 GameObject _uiGo = Instantiate(PlayerUiPrefab);

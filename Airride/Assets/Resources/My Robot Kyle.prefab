@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 8483492104486691847}
   - component: {fileID: 8912689003361257247}
   - component: {fileID: 2683684315894316157}
+  - component: {fileID: 7373878209240427234}
   m_Layer: 0
   m_Name: My Robot Kyle
   m_TagString: Untagged
@@ -384,7 +385,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283024450083264531}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd08475b23aa548b7b9d28397d430b32, type: 3}
   m_Name: 
@@ -480,6 +481,18 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &7373878209240427234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283024450083264531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3795dc77a5e3cf54388ed6d1293091a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &283024450083264533
 GameObject:
   m_ObjectHideFlags: 0
