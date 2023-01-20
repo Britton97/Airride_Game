@@ -115,6 +115,7 @@ namespace Com.MyCompany.MyGame
                 Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
             }
             #endregion
+            
             if (_cameraFollow != null)
             {
                 if (photonView.IsMine)
