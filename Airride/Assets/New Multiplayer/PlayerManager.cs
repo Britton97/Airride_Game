@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 using Photon.Pun;
 
@@ -23,12 +24,14 @@ namespace Com.MyCompany.MyGame
                 // We own this player: send the others our data
                 stream.SendNext(IsFiring);
                 stream.SendNext(Health);
+                stream.SendNext(IsFrozen);
             }
             else
             {
                 // Network player, receive data
                 this.IsFiring = (bool)stream.ReceiveNext();
                 this.Health = (float)stream.ReceiveNext();
+                this.IsFrozen = (bool)stream.ReceiveNext();
             }
         }
         #endregion
@@ -42,8 +45,9 @@ namespace Com.MyCompany.MyGame
         [SerializeField]
         public GameObject PlayerUiPrefab;
 
-        #endregion
+        public WhichTeam.Team team;
 
+        #endregion
 
         #region Private Fields
 
@@ -52,12 +56,18 @@ namespace Com.MyCompany.MyGame
         private GameObject beams;
         //True, when the user is firing
         bool IsFiring;
+        bool IsFrozen;
         [Tooltip("The current Health of our player")]
         public float Health = 1f;
         #endregion
 
+        #region Static Fields TEST!!!
 
-        #region Private Methods
+        public static Action OnTagged;
+
+        #endregion
+
+        #region Honestly I dont know what this is for
 
         #if UNITY54ORNEWER
         void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadingMode)
@@ -68,6 +78,7 @@ namespace Com.MyCompany.MyGame
 
 
         #endregion
+        
         #region MonoBehaviour CallBacks
 
         /// <summary>
@@ -102,19 +113,6 @@ namespace Com.MyCompany.MyGame
         {
             CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
             CameraFollow _cameraFollow = this.gameObject.GetComponent<CameraFollow>();
-            #region Old CameraWork Delete Later
-            if (_cameraWork != null)
-            {
-                if (photonView.IsMine)
-                {
-                    _cameraWork.OnStartFollowing();
-                }
-            }
-            else
-            {
-                Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
-            }
-            #endregion
             
             if (_cameraFollow != null)
             {
@@ -151,10 +149,14 @@ namespace Com.MyCompany.MyGame
         {
 
             ProcessInputs();
+            /*
             if (Health <= 0f)
             {
                 GameManager.Instance.LeaveRoom();
+                //right here is where i need to invoke the event or action that will toggle the check mark or cross
+                //also it should change whether or not the player can move.
             }
+            */
 
             // trigger Beams active state
             if (beams != null && IsFiring != beams.activeInHierarchy)
@@ -163,6 +165,9 @@ namespace Com.MyCompany.MyGame
             }
         }
 
+        #endregion
+
+        #region Collider Methods
         /// <summary>
         /// MonoBehaviour method called when the Collider 'other' enters the trigger.
         /// Affect Health of the Player if the collider is a beam
@@ -181,7 +186,20 @@ namespace Com.MyCompany.MyGame
             {
                 return;
             }
-            Health -= 0.1f;
+            PlayerManager otherPlayer = other.GetComponent<PlayerManager>();
+            //if other player is a tagger and you are a runner then you get tagged
+            if (otherPlayer.team == WhichTeam.Team.Tagger && team == WhichTeam.Team.Runner)
+            {
+                //Debug.Log("You got tagged");
+                OnTagged?.Invoke();
+                //Health -= 0.1f;
+            }
+            else if(otherPlayer.team == WhichTeam.Team.Runner && team == WhichTeam.Team.Frozen)
+            {
+                Debug.Log("You got unfrozen");
+            }
+
+            //Health -= 0.1f;
         }
         /// <summary>
         /// MonoBehaviour method called once per frame for every Collider 'other' that is touching the trigger.
@@ -190,6 +208,8 @@ namespace Com.MyCompany.MyGame
         /// <param name="other">Other.</param>
         void OnTriggerStay(Collider other)
         {
+            //Debug.Log("OnTriggerStay");
+            /*
             // we dont' do anything if we are not the local player.
             if (!photonView.IsMine)
             {
@@ -203,7 +223,12 @@ namespace Com.MyCompany.MyGame
             }
             // we slowly affect health when beam is constantly hitting us, so player has to move to prevent death.
             Health -= 0.1f * Time.deltaTime;
+            */
         }
+
+        #endregion
+
+        #region Level Loading Methods
 
         #if !UNITY_5_4_OR_NEWER
         /// <summary>See CalledOnLevelWasLoaded. Outdated in Unity 5.4.</summary>
@@ -236,7 +261,7 @@ namespace Com.MyCompany.MyGame
 
         #endregion
 
-        #region Custom
+        #region Inputs
 
         /// <summary>
         /// Processes the inputs. Maintain a flag representing when the user is pressing Fire.

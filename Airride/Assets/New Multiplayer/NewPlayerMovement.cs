@@ -14,15 +14,18 @@ public class NewPlayerMovement : MonoBehaviourPun
     private IEnumerator moveCoroutine;
     private IEnumerator aimCoroutine;
     private WaitForFixedUpdate waitForFixedUpdate;
-    [SerializeField] private bool isMoving;
+    private bool isMoving;
     #endregion
 
     #region Player/Movement Fields
+    public AnimationCurve movementCurve;
+    [SerializeField] private float timeSinceStarted;
     [SerializeField] private float speed = 5f;
+    private float speedMultiplier = 1.0f; //this is for the animation curve
     [SerializeField] private float turnLimiter;
     private float gravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 3.0f;
-    [SerializeField] private float _velocity;
+    private float _velocity;
     #endregion
 
     // Start is called before the first frame update
@@ -65,6 +68,7 @@ public class NewPlayerMovement : MonoBehaviourPun
 
     private IEnumerator MoveCoroutine(InputAction.CallbackContext context)
     {
+        timeSinceStarted = 0;
         while(true)
         {
             if(photonView.IsMine)
@@ -81,8 +85,14 @@ public class NewPlayerMovement : MonoBehaviourPun
     private void PlayerMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
+
+        //test
+        speedMultiplier = movementCurve.Evaluate(timeSinceStarted);
+        timeSinceStarted += Time.deltaTime;
+        //test
+
         Vector3 worldMove = new Vector3(movementInput.x, _velocity, movementInput.y);
-        characterController.Move(worldMove * speed * Time.deltaTime);
+        characterController.Move(worldMove * speed * speedMultiplier * Time.deltaTime);
     }
 
     public void PlayerAim(InputAction.CallbackContext context)

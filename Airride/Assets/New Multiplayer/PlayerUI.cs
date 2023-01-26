@@ -33,8 +33,16 @@ namespace Com.MyCompany.MyGame
         [Tooltip("Pixel offset from the player target")]
         [SerializeField]
         public Vector3 screenOffset = new Vector3(0f, 30f, 0f);
+        [SerializeField] private GameObject checkMark;
+        [SerializeField] private GameObject crossMark;
 
         #endregion
+
+        #region Static Fields
+
+
+        #endregion
+
 
         #region MonoBehaviour Callbacks
 
@@ -58,6 +66,8 @@ namespace Com.MyCompany.MyGame
         {
             this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
             _canvasGroup = this.GetComponent<CanvasGroup>();
+
+            PlayerManager.OnTagged += OnTagged;
         }
 
         void LateUpdate()
@@ -104,6 +114,14 @@ namespace Com.MyCompany.MyGame
             {
                 characterControllerHeight = characterController.height;
             }
+        }
+        #endregion
+
+        #region Player Status Methods
+        private void OnTagged()
+        {
+            checkMark.SetActive(false);
+            crossMark.SetActive(true);
         }
         #endregion
     }

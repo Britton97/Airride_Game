@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8d36df9f5e198c54eaa9c7448812c1c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -166,7 +166,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8d36df9f5e198c54eaa9c7448812c1c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -274,11 +274,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901c095b10fe8ed49ac3c99a3f88e0fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMoving: 0
+  movementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.3
+      inSlope: -0.0006786021
+      outSlope: -0.0006786021
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.83403707
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.04738667
+      outSlope: -0.04738667
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.8533686
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  timeSinceStarted: 0
   speed: 4
-  turnLimiter: 0.98
+  turnLimiter: 75
   gravityMultiplier: 3
-  _velocity: 0
 --- !u!114 &8665734832625735898
 MonoBehaviour:
   m_ObjectHideFlags: 0
