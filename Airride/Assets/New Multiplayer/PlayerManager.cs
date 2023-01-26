@@ -46,6 +46,7 @@ namespace Com.MyCompany.MyGame
         public GameObject PlayerUiPrefab;
 
         public WhichTeam.Team team;
+        public PhotonView PV;
 
         #endregion
 
@@ -86,6 +87,7 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Awake()
         {
+            PV = GetComponent<PhotonView>();
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
             if (photonView.IsMine)
@@ -186,11 +188,13 @@ namespace Com.MyCompany.MyGame
             {
                 return;
             }
-            PlayerManager otherPlayer = other.GetComponent<PlayerManager>();
+            PlayerManager otherPlayer = other.gameObject.GetComponentInParent<PlayerManager>();
             //if other player is a tagger and you are a runner then you get tagged
             if (otherPlayer.team == WhichTeam.Team.Tagger && team == WhichTeam.Team.Runner)
             {
-                //Debug.Log("You got tagged");
+                Debug.LogWarning("You got tagged");
+
+                SetTeam(2);
                 OnTagged?.Invoke();
                 //Health -= 0.1f;
             }
@@ -289,5 +293,20 @@ namespace Com.MyCompany.MyGame
 
         #endregion
 
+        #region Test Game Manager Methods
+
+        public void SetTeam(int _team)
+        {
+            if(PV.IsMine)
+            {
+                PV.RPC("RPC_SetTeam", RpcTarget.AllBuffered, _team);
+            }
+        }
+        [PunRPC]
+        private void RPC_SetTeam(int _team)
+        {
+            team = (WhichTeam.Team)_team;
+        }
+        #endregion
     }
 }

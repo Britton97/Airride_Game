@@ -4,8 +4,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Photon.Pun;
 
-public class NewPlayerMovement : MonoBehaviourPun
+public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
 {
+    #region IPunObservable implementation
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            stream.SendNext(timeSinceStarted);
+        }
+        else
+        {
+            // Network player, receive data
+            this.timeSinceStarted = (float)stream.ReceiveNext();
+        }
+    }
+
+    #endregion
     #region Private Fields
     private PlayerControls controls;
     private Vector2 movementInput;

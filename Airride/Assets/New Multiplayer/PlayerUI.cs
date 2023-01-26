@@ -68,6 +68,9 @@ namespace Com.MyCompany.MyGame
             _canvasGroup = this.GetComponent<CanvasGroup>();
 
             PlayerManager.OnTagged += OnTagged;
+
+            crossMark.SetActive(true);
+            crossMark.SetActive(false);
         }
 
         void LateUpdate()

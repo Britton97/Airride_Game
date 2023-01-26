@@ -83,13 +83,16 @@ void Start()
             Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
             //we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
             GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-            if(PhotonNetwork.IsMasterClient)
+
+            if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
-                player.GetComponent<PlayerManager>().team = WhichTeam.Team.Tagger;
+                player.GetComponent<PlayerManager>().SetTeam(0);
+                Debug.LogWarning("One player in the room");
             }
             else
             {
-                player.GetComponent<PlayerManager>().team = WhichTeam.Team.Runner;
+                player.GetComponent<PlayerManager>().SetTeam(1);
+                Debug.LogWarning("Two players in the room");
             }
         }
         else
@@ -110,7 +113,6 @@ void Start()
         //PhotonNetwork.LoadLevel("Room for " + PhotonNetwork.CurrentRoom.PlayerCount);
     }
     #endregion
-
 }
 
 

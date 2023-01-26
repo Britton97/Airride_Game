@@ -227,6 +227,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 8665734832625735898}
   - {fileID: 8362270631607568904}
+  - {fileID: 1526927726880460461}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -279,21 +280,21 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.3
-      inSlope: -0.0006786021
-      outSlope: -0.0006786021
+      value: 0
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
-      weightedMode: 3
+      weightedMode: 0
       inWeight: 0
-      outWeight: 0.83403707
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: -0.04738667
-      outSlope: -0.04738667
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.8533686
+      weightedMode: 0
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -315,6 +316,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerUiPrefab: {fileID: 2007735332491596633, guid: c92a51835e7081a4984a2e8eed7b747a, type: 3}
+  team: 0
+  PV: {fileID: 0}
   beams: {fileID: 1526927726253468094}
   Health: 1
 --- !u!114 &8711934995058501966
