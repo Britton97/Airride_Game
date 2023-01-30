@@ -18,6 +18,11 @@ namespace Com.MyCompany.MyGame
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
 
+    [Header("Player Roles")]
+    public WhichTeam Tagger;
+    public WhichTeam Runner;
+    public WhichTeam Frozen;
+
     #endregion
 
 

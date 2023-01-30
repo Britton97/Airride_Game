@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 1526927726880460461}
   - component: {fileID: 8665734832625735898}
   - component: {fileID: 8711934995058501966}
+  - component: {fileID: -6473632228341233236}
   m_Layer: 0
   m_Name: Test Player
   m_TagString: Untagged
@@ -275,6 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901c095b10fe8ed49ac3c99a3f88e0fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterController: {fileID: 0}
   movementCurve:
     serializedVersion: 2
     m_Curve:
@@ -301,7 +303,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   timeSinceStarted: 0
   speed: 4
-  turnLimiter: 75
+  turnLimiter: 0.1
   gravityMultiplier: 3
 --- !u!114 &8665734832625735898
 MonoBehaviour:
@@ -316,9 +318,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerUiPrefab: {fileID: 2007735332491596633, guid: c92a51835e7081a4984a2e8eed7b747a, type: 3}
-  team: 0
-  PV: {fileID: 0}
+  playerTeam: {fileID: 0}
+  teamList:
+  - {fileID: 11400000, guid: f229a0d63b8e465439de7600d4a2c7c4, type: 2}
+  - {fileID: 11400000, guid: c75f51d02eb583f4089776cb15605804, type: 2}
+  - {fileID: 11400000, guid: a1c55f2db9cc8844db5d441120d3bec9, type: 2}
   beams: {fileID: 1526927726253468094}
+  IsFrozen: 0
   Health: 1
 --- !u!114 &8711934995058501966
 MonoBehaviour:
@@ -332,3 +338,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3795dc77a5e3cf54388ed6d1293091a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6473632228341233236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526927726880460463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b786c704799faac4289b8ea84d64fe42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashSpeed: 10
+  dashTime: 0.25

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4288c5cdc22c9424d96e100c7e08021f, type: 3}
+  m_Name: Frozen
+  m_EditorClassIdentifier: 
+  activeTeam: 2
+  teamNumber: 2
+  cantMove: 1
+  x1: 0
+  y1: 0
+  z1: {fileID: 11400000, guid: f229a0d63b8e465439de7600d4a2c7c4, type: 2}
+  x2: 1
+  y2: 1
+  z2: {fileID: 11400000, guid: c75f51d02eb583f4089776cb15605804, type: 2}
+  x3: 2
+  y3: 2
+  z3: {fileID: 11400000}

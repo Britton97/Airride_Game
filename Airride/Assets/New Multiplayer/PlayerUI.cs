@@ -3,12 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 
 namespace Com.MyCompany.MyGame
 {
-    public class PlayerUI : MonoBehaviour
+    public class PlayerUI : MonoBehaviourPunCallbacks, IPunObservable
     {
+
+        #region IPunObservable implementation
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                // We own this player: send the others our data
+                stream.SendNext(IsFrozen);
+            }
+            else
+            {
+                // Network player, receive data
+                this.IsFrozen = (bool)stream.ReceiveNext();
+            }
+        }
+
+        #endregion
         #region Private Fields
         [Tooltip("UI Text to display Player's Name")]
         [SerializeField]
@@ -25,6 +44,7 @@ namespace Com.MyCompany.MyGame
         Renderer targetRenderer;
         CanvasGroup _canvasGroup;
         Vector3 targetPosition;
+        bool IsFrozen;
 
         #endregion
 
@@ -43,7 +63,6 @@ namespace Com.MyCompany.MyGame
 
         #endregion
 
-
         #region MonoBehaviour Callbacks
 
         void Update()
@@ -53,6 +72,8 @@ namespace Com.MyCompany.MyGame
             {
                 playerHealthSlider.value = target.Health;
             }
+            
+            OnTagged();
 
             // Destroy itself if the target is null, It's a fail safe when Photon is destroying Instances of a Player over the network
             if (target == null)
@@ -66,8 +87,6 @@ namespace Com.MyCompany.MyGame
         {
             this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
             _canvasGroup = this.GetComponent<CanvasGroup>();
-
-            PlayerManager.OnTagged += OnTagged;
 
             crossMark.SetActive(true);
             crossMark.SetActive(false);
@@ -123,8 +142,8 @@ namespace Com.MyCompany.MyGame
         #region Player Status Methods
         private void OnTagged()
         {
-            checkMark.SetActive(false);
-            crossMark.SetActive(true);
+            checkMark.SetActive(!target.IsFrozen);
+            crossMark.SetActive(target.IsFrozen);                
         }
         #endregion
     }

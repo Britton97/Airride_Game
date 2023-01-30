@@ -4,34 +4,21 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Photon.Pun;
 
-public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
+namespace Com.MyCompany.MyGame
 {
-    #region IPunObservable implementation
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            // We own this player: send the others our data
-            stream.SendNext(timeSinceStarted);
-        }
-        else
-        {
-            // Network player, receive data
-            this.timeSinceStarted = (float)stream.ReceiveNext();
-        }
-    }
-
-    #endregion
+public class NewPlayerMovement : MonoBehaviourPun
+{
     #region Private Fields
     private PlayerControls controls;
     private Vector2 movementInput;
     private Vector3 suggestedMove;
-    private CharacterController characterController;
+    [HideInInspector]
+    public CharacterController characterController;
     private IEnumerator moveCoroutine;
     private IEnumerator aimCoroutine;
     private WaitForFixedUpdate waitForFixedUpdate;
     private bool isMoving;
+    private PlayerManager target;
     #endregion
 
     #region Player/Movement Fields
@@ -45,6 +32,21 @@ public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
     private float _velocity;
     #endregion
 
+    #region Set Target
+
+    public void SetTarget(PlayerManager _target)
+    {
+        if (_target == null)
+        {
+            Debug.LogError("<Color=Red><a>Missing</a></Color> PlayMakerManager target for PlayerUI.SetTarget.", this);
+            return;
+        }
+
+        target = _target;
+    }
+
+    #endregion
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +55,12 @@ public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
         controls.Player.Enable();
         controls.Player.Move.started += MoveEntry;
         controls.Player.Move.canceled += MoveEntry;
+    }
+
+    void OnDisable()
+    {
+        controls.Player.Move.started -= MoveEntry;
+        controls.Player.Move.canceled -= MoveEntry;
     }
 
     void FixedUpdate()
@@ -66,6 +74,8 @@ public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
 
     private void MoveEntry(InputAction.CallbackContext context)
     {
+        if(target == null) {return;}
+        if(target.IsFrozen) {return;}
         //movementInput = context.ReadValue<Vector2>();
         //Debug.Log(context.phase);
         if(context.started)
@@ -118,7 +128,7 @@ public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
         suggestedMove = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
 
         //decides the turn strength. This makes it so the player does automatically face the joystick direction
-        Vector3 limitedAngle = ((suggestedMove * (1 - turnLimiter * Time.deltaTime)) + (transform.forward * turnLimiter)).normalized;
+        Vector3 limitedAngle = (suggestedMove * ((1 - turnLimiter) * Time.deltaTime) + (transform.forward * turnLimiter)).normalized;
 
         //sets the player forward to the limited angle
         Quaternion lookRotation = Quaternion.LookRotation(limitedAngle, Vector3.up);
@@ -148,4 +158,5 @@ public class NewPlayerMovement : MonoBehaviourPun, IPunObservable
             characterController.Move(new Vector3(0,_velocity,0));
         }
     }
+}
 }

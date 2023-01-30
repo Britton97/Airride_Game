@@ -44,3 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3454a0a52cb0874c88bfb26e5baef2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 1526927726880460463, guid: d9f4051d045c7e54ea28c13d3e3345bb, type: 3}
+  Tagger: {fileID: 11400000, guid: f229a0d63b8e465439de7600d4a2c7c4, type: 2}
+  Runner: {fileID: 11400000, guid: c75f51d02eb583f4089776cb15605804, type: 2}
+  Frozen: {fileID: 11400000, guid: a1c55f2db9cc8844db5d441120d3bec9, type: 2}

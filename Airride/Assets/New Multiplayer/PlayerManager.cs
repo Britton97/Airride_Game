@@ -4,7 +4,7 @@ using System;
 
 using Photon.Pun;
 
-using System.Collections;
+using System.Collections.Generic;
 using Photon.Pun.Demo.PunBasics;
 
 namespace Com.MyCompany.MyGame
@@ -23,14 +23,12 @@ namespace Com.MyCompany.MyGame
             {
                 // We own this player: send the others our data
                 stream.SendNext(IsFiring);
-                stream.SendNext(Health);
                 stream.SendNext(IsFrozen);
             }
             else
             {
                 // Network player, receive data
                 this.IsFiring = (bool)stream.ReceiveNext();
-                this.Health = (float)stream.ReceiveNext();
                 this.IsFrozen = (bool)stream.ReceiveNext();
             }
         }
@@ -45,8 +43,11 @@ namespace Com.MyCompany.MyGame
         [SerializeField]
         public GameObject PlayerUiPrefab;
 
-        public WhichTeam.Team team;
-        public PhotonView PV;
+        public WhichTeam playerTeam;
+
+        [Header("Player Roles")]
+        public List<WhichTeam> teamList = new List<WhichTeam>();
+        //public PhotonView PV;
 
         #endregion
 
@@ -57,15 +58,11 @@ namespace Com.MyCompany.MyGame
         private GameObject beams;
         //True, when the user is firing
         bool IsFiring;
-        bool IsFrozen;
+        [HideInInspector]
+        public bool IsFrozen;
+        [HideInInspector]
         [Tooltip("The current Health of our player")]
         public float Health = 1f;
-        #endregion
-
-        #region Static Fields TEST!!!
-
-        public static Action OnTagged;
-
         #endregion
 
         #region Honestly I dont know what this is for
@@ -87,7 +84,7 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Awake()
         {
-            PV = GetComponent<PhotonView>();
+            //PV = GetComponent<PhotonView>();
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
             if (photonView.IsMine)
@@ -138,6 +135,8 @@ namespace Com.MyCompany.MyGame
                 Debug.LogWarning("<Color=Red><a>Missing</a></Color> PlayerUiPrefab reference on player Prefab.", this);
             }
 
+            GetComponent<NewPlayerMovement>().SetTarget(this);
+
             #if UNITY54ORNEWER
             // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
@@ -178,6 +177,9 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void OnTriggerEnter(Collider other)
         {
+            //other player touched you
+            //they then affect your team
+            //their team scriptable object will decide for you what team you are on now
             if (!photonView.IsMine)
             {
                 return;
@@ -189,45 +191,15 @@ namespace Com.MyCompany.MyGame
                 return;
             }
             PlayerManager otherPlayer = other.gameObject.GetComponentInParent<PlayerManager>();
-            //if other player is a tagger and you are a runner then you get tagged
-            if (otherPlayer.team == WhichTeam.Team.Tagger && team == WhichTeam.Team.Runner)
-            {
-                Debug.LogWarning("You got tagged");
-
-                SetTeam(2);
-                OnTagged?.Invoke();
-                //Health -= 0.1f;
-            }
-            else if(otherPlayer.team == WhichTeam.Team.Runner && team == WhichTeam.Team.Frozen)
-            {
-                Debug.Log("You got unfrozen");
-            }
-
-            //Health -= 0.1f;
-        }
-        /// <summary>
-        /// MonoBehaviour method called once per frame for every Collider 'other' that is touching the trigger.
-        /// We're going to affect health while the beams are touching the player
-        /// </summary>
-        /// <param name="other">Other.</param>
-        void OnTriggerStay(Collider other)
-        {
-            //Debug.Log("OnTriggerStay");
-            /*
-            // we dont' do anything if we are not the local player.
-            if (!photonView.IsMine)
+            int newTeam = otherPlayer.playerTeam.TouchedPlayer(this.playerTeam.activeTeam);
+            if(newTeam == -1 || newTeam == playerTeam.GetTeamNumber())
             {
                 return;
             }
-            // We are only interested in Beamers
-            // we should be using tags but for the sake of distribution, let's simply check by name.
-            if (!other.name.Contains("Beam"))
+            else
             {
-                return;
+                SetTeam(newTeam);
             }
-            // we slowly affect health when beam is constantly hitting us, so player has to move to prevent death.
-            Health -= 0.1f * Time.deltaTime;
-            */
         }
 
         #endregion
@@ -266,7 +238,6 @@ namespace Com.MyCompany.MyGame
         #endregion
 
         #region Inputs
-
         /// <summary>
         /// Processes the inputs. Maintain a flag representing when the user is pressing Fire.
         /// </summary>
@@ -297,15 +268,18 @@ namespace Com.MyCompany.MyGame
 
         public void SetTeam(int _team)
         {
-            if(PV.IsMine)
+            if(photonView.IsMine)
             {
-                PV.RPC("RPC_SetTeam", RpcTarget.AllBuffered, _team);
+                photonView.RPC("RPC_SetTeam", RpcTarget.AllBuffered, _team);
             }
         }
         [PunRPC]
         private void RPC_SetTeam(int _team)
         {
-            team = (WhichTeam.Team)_team;
+            Debug.LogWarning("SETTING TEAM");
+            playerTeam = teamList[_team];
+            playerTeam.EnterState(this);
+            IsFrozen = playerTeam.cantMove;
         }
         #endregion
     }
