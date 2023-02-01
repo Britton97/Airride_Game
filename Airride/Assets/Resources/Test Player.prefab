@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 1526927726880460461}
   - component: {fileID: 8665734832625735898}
   - component: {fileID: 8711934995058501966}
-  - component: {fileID: -6473632228341233236}
+  - component: {fileID: 2031140009923240068}
   m_Layer: 0
   m_Name: Test Player
   m_TagString: Untagged
@@ -283,21 +283,21 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.0054838387
+      outSlope: 0.0054838387
       tangentMode: 0
-      weightedMode: 0
+      weightedMode: 3
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.6073762
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.0608413
+      outSlope: -1.0608413
       tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      weightedMode: 3
+      inWeight: 0.38152254
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3795dc77a5e3cf54388ed6d1293091a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6473632228341233236
+--- !u!114 &2031140009923240068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -347,8 +347,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1526927726880460463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b786c704799faac4289b8ea84d64fe42, type: 3}
+  m_Script: {fileID: 11500000, guid: fb77346e3c686544191a172e238e30a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSpeed: 10
-  dashTime: 0.25
+  ability: {fileID: 11400000, guid: 2c423fac6bf414343a18cd9d8241a9bd, type: 2}
+  activeTime: 0
+  cooldownTime: 0

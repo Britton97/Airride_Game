@@ -47,7 +47,6 @@ namespace Com.MyCompany.MyGame
 
         [Header("Player Roles")]
         public List<WhichTeam> teamList = new List<WhichTeam>();
-        //public PhotonView PV;
 
         #endregion
 
@@ -148,17 +147,7 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
-
             ProcessInputs();
-            /*
-            if (Health <= 0f)
-            {
-                GameManager.Instance.LeaveRoom();
-                //right here is where i need to invoke the event or action that will toggle the check mark or cross
-                //also it should change whether or not the player can move.
-            }
-            */
-
             // trigger Beams active state
             if (beams != null && IsFiring != beams.activeInHierarchy)
             {
