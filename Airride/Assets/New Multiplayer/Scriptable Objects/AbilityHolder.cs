@@ -16,27 +16,23 @@ public class AbilityHolder : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        Ability_Button.AbilityUsed += UseAbility;
+        Ability_Button.AbilityUsed += UseTapAbility;
+        //Ability_Button.AbilityDeactivated += ability.Deactivate;
     }
-
-    enum AbilityState
+    
+    void OnDestroy()
     {
-        Ready,
-        Cooldown
+        Ability_Button.AbilityUsed -= UseTapAbility;
     }
 
-    AbilityState state = AbilityState.Ready;
-
-    void UseAbility()
+    #region Tap Ability
+    void UseTapAbility()
     {
         if(usable && photonView.IsMine)
         {
-            ability.Activate(gameObject);
-            StartCoroutine(ActiveCoroutine());
+            if(ability.Activate(gameObject)){StartCoroutine(ActiveCoroutine());}
         }
     }
-
-    #region Coroutines
 
     private IEnumerator ActiveCoroutine()
     {
@@ -66,5 +62,32 @@ public class AbilityHolder : MonoBehaviourPunCallbacks
     }
 
     #endregion
+
+    #region Held Ability
+    
+    private void UseHeldAbility()
+    {
+        if(usable && photonView.IsMine)
+        {
+            if(ability.Activate(gameObject)){StartCoroutine(ActiveCoroutine());}
+        }
+    }
+    //needs to call something that will decrease the life of the ability
+    //when the life is 0, it will stop the ability
+    //when the ability is stopped, it will raise the cooldown
+
+    private IEnumerator HeldCoroutine()
+    {
+        while(true)
+        {
+            ability.DuringDurtion(gameObject);
+            yield return waitForFixedUpdate;
+        }
+    }
+    #endregion
+    public void Test()
+    {
+        Debug.Log("Test");
+    }
 }
 }

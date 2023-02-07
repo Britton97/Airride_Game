@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a5a0fecd5d23bd4cbda53e17cfde33c, type: 3}
-  m_Name: thing
+  m_Script: {fileID: 11500000, guid: 67fc8f58e49d3e44091ab5b4eb128083, type: 3}
+  m_Name: New Bool Data
   m_EditorClassIdentifier: 
-  playerStringID: Britton

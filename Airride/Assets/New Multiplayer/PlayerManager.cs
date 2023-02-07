@@ -147,12 +147,14 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
-            ProcessInputs();
+            /*
+            //ProcessInputs();
             // trigger Beams active state
             if (beams != null && IsFiring != beams.activeInHierarchy)
             {
                 beams.SetActive(IsFiring);
             }
+            */
         }
 
         #endregion
