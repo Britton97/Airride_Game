@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1526927726253468095
 Transform:
   m_ObjectHideFlags: 0
@@ -115,7 +115,6 @@ GameObject:
   - component: {fileID: 1526927726880460461}
   - component: {fileID: 8665734832625735898}
   - component: {fileID: 8711934995058501966}
-  - component: {fileID: 2031140009923240068}
   m_Layer: 0
   m_Name: Test Player
   m_TagString: Untagged
@@ -302,7 +301,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   timeSinceStarted: 0
-  speed: 4
+  speed: {fileID: 11400000, guid: e43909bca5768b542af69596d55c5a88, type: 2}
+  speedMultiplier: {fileID: 11400000, guid: 7e7473c2abc6c06469086de0c26695b4, type: 2}
   turnLimiter: 0.1
   gravityMultiplier: 3
 --- !u!114 &8665734832625735898
@@ -338,18 +338,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3795dc77a5e3cf54388ed6d1293091a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2031140009923240068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526927726880460463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb77346e3c686544191a172e238e30a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ability: {fileID: 11400000, guid: 2c423fac6bf414343a18cd9d8241a9bd, type: 2}
-  activeTime: 0
-  cooldownTime: 0
