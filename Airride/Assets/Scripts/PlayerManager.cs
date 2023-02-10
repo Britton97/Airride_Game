@@ -229,8 +229,7 @@ namespace Com.MyCompany.MyGame
             if(photonView.IsMine)
             {
                 photonView.RPC("RPC_SetTeam", RpcTarget.AllBuffered, _team);
-                //photonView.RPC("Test", RpcTarget.AllBuffered, photonView.ViewID);
-                Test(photonView.ViewID); //do not want to buffer spawn objects. it will spawn duplicates
+                //SpawnTeamObjects(photonView.ViewID); //do not want to buffer spawn objects. it will spawn duplicates
             }
         }
         [PunRPC]
@@ -241,27 +240,28 @@ namespace Com.MyCompany.MyGame
             playerTeam.EnterState(this);
             IsFrozen = playerTeam.cantMove;
         }
-        private void Test(int id)
+
+        //game manager should call this function when spawning a new player
+        //then this function will call the spawn role objects function on the team scriptable object
+        //the scriptable object should take in the id of the photon view of the player
+        //spawn each individual object and set the parent to the photon view id in an rpc function to sync over the server
+
+
+        //this should not take a parameter
+        //it should send the photon view id to the scriptable object
+        //then the SO should do all of the heavy lifting like setting the parent
+        //and running the RPC
+        public void SpawnTeamObjects()
         {
-            GameObject passed = PhotonView.Find(id).gameObject;
-            /*
-            if(this.gameObject != passed)
-            {
-                return;
-            }
-            */
-            //get game object with photon view id 
-            List<GameObject> spawned = playerTeam.SpawnRoleObjects(passed);
-            if(spawned.Count > 0)
-            {
-                foreach(GameObject g in spawned)
-                {
-                    //g.transform.SetParent(passed.transform);
-                    //call RPC on the spawned object to set the parent
-                    g.SendMessage("SetParent", id, SendMessageOptions.RequireReceiver); //call the set target function on every script that has a SetTarget function
-                }
-            }
-            playerTeam.SpawnRoleUIs(GameObject.Find("Ability Panel").gameObject);            
+            if(photonView.IsMine)
+            {            
+                int id = photonView.ViewID; //grab the photon view id of the player
+                GameObject passed = PhotonView.Find(id).gameObject;
+                playerTeam.SpawnRoleObjects(id);
+                //g.SendMessage("SetParent", id, SendMessageOptions.RequireReceiver); //call the set target function on every script that has a SetTarget function
+
+                playerTeam.SpawnRoleUIs(GameObject.Find("Ability Panel").gameObject);
+            }     
         }
 
         #endregion

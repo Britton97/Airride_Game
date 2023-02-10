@@ -13,24 +13,26 @@ public class AbilityHolder : MonoBehaviourPunCallbacks
     public float cooldownTime;
     private bool usable = true;
     private WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
+    [SerializeField] private GameObject parentObj;
 
-    void Awake()
+    void Start()
     {
-        Ability_Button.AbilityUsed += UseTapAbility;
+        parentObj = transform.parent.gameObject;
+        //Ability_Button.AbilityUsed += UseTapAbility;
         //Ability_Button.AbilityDeactivated += ability.Deactivate;
     }
     
     void OnDestroy()
     {
-        Ability_Button.AbilityUsed -= UseTapAbility;
+        //Ability_Button.AbilityUsed -= UseTapAbility;
     }
 
     #region Tap Ability
-    void UseTapAbility()
+    public void UseTapAbility()
     {
         if(usable && photonView.IsMine)
         {
-            if(ability.Activate(gameObject)){StartCoroutine(ActiveCoroutine());}
+            if(ability.Activate(parentObj)){StartCoroutine(ActiveCoroutine());}
         }
     }
 
@@ -85,9 +87,18 @@ public class AbilityHolder : MonoBehaviourPunCallbacks
         }
     }
     #endregion
-    public void Test()
+
+    public void SetParent(int parentId)
     {
-        Debug.Log("Test");
+        Debug.Log("Setting parent");
+        //transform.SetParent(PhotonView.Find(parentId).transform);
+        photonView.RPC("SetParentRPC", RpcTarget.AllBuffered, parentId);
+    }
+
+    [PunRPC]
+    private void SetParentRPC(int parentId)
+    {
+        transform.SetParent(PhotonView.Find(parentId).transform);
     }
 }
 }

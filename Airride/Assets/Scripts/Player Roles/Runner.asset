@@ -16,7 +16,8 @@ MonoBehaviour:
   teamNumber: 1
   roleUIs:
   - {fileID: 3300974082632591807, guid: 42190f2c121e07346b219610d960a71a, type: 3}
-  roleObjects: []
+  roleObjects:
+  - {fileID: 2668768808173784582, guid: 5056c57e7a1f64d4f968592a077d7092, type: 3}
   cantMove: 0
   x1: 0
   y1: 0

@@ -125,9 +125,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3300974082632591781}
-        m_TargetAssemblyTypeName: Ability_Button, Assembly-CSharp
-        m_MethodName: ButtonPressed
+      - m_Target: {fileID: 11400000, guid: 5a1e3c1c47c190c4aa5dc1f74bf0ad27, type: 2}
+        m_TargetAssemblyTypeName: GameAction, Assembly-CSharp
+        m_MethodName: InvokeGameAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

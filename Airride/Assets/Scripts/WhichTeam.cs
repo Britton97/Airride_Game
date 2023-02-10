@@ -89,19 +89,16 @@ public class WhichTeam : ScriptableObject
         }
     }
 
-    public List<GameObject> SpawnRoleObjects(GameObject parent)
+    public void SpawnRoleObjects(int id)
     {
-        if(roleObjects.Count == 0){return null;}
-        List<GameObject> spawned = new List<GameObject>();
+        if(roleObjects.Count == 0){return;} //if no objects to spawn return
 
         foreach (GameObject roleObject in roleObjects)
         {
-            Debug.LogError($"Got here. team is {activeTeam}");
             GameObject obj = PhotonNetwork.Instantiate(roleObject.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-            spawned.Add(obj);
-            obj.transform.SetParent(parent.transform);
+            obj.SendMessage("SetParent", id, SendMessageOptions.DontRequireReceiver); //call the set target function on every script that has a SetTarget function
+
         }
-        return spawned;
     }
 
     #endregion

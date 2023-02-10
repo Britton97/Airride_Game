@@ -77,17 +77,18 @@ namespace Com.MyCompany.MyGame
             Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
             //we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
             GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-
+            PlayerManager playerManager = player.GetComponent<PlayerManager>();
             
 
             if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
-                player.GetComponent<PlayerManager>().SetTeam(0);
+                playerManager.SetTeam(0); //tagger
             }
             else if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
             {
-                player.GetComponent<PlayerManager>().SetTeam(1);
+                playerManager.SetTeam(1); //runner
             }
+            playerManager.SpawnTeamObjects();
         }
         else
         {
